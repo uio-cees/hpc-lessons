@@ -1,13 +1,13 @@
 ---
 layout: page
-title: Lesson Title
+title: Using the CEES HPC resources
 subtitle: Reference
 ---
-## [Topic Title One](01-one.html)
+## [Logging in for the first time](01-login.html)
 
 ...commands and examples...
 
-## [Topic Title Two](02-two.html)
+## [Accessing and using the cod nodes](02-codnodes.html)
 
 ...commands and examples...
 

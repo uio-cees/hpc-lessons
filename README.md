@@ -1,5 +1,9 @@
-#Introductory lessons for using the CESS HPC resources
+#Using the CEES HPC resources
 
+See <http://swcarpentry.github.io/shell-novice/>.
+
+**Work in progress**  
+Once we have some contents in place, we welcome pull requests.
 
 Many thanks to [Software Carpentry](software-carpentry.org) for the template to this lesson material:
 

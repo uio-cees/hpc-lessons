@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Lesson Title
+title: Using the CEES HPC resources
 subtitle: Discussion
 ---
 *   First point of general discussion.

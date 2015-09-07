@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Lesson Title
+title: Using the CEES HPC resources
 subtitle: Instructor's Guide
 ---
 ## Overall
@@ -9,7 +9,7 @@ subtitle: Instructor's Guide
 
 *   Some hard-won experience.
 
-## [Topic Title One](01-one.html)
+## [Logging in for the first time](01-login.html)
 
 *   A specific tip or trick about the first topic.
 
@@ -20,6 +20,6 @@ subtitle: Instructor's Guide
 
 2.  Discussion of second challenge.
 
-## [Topic Title Two](02-two.html)
+## [Accessing and using the cod nodes](02-codnodes.html)
 
 *   Et cetera.

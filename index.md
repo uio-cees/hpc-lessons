@@ -1,23 +1,33 @@
 ---
 layout: page
-title: Lesson Title
+title: Using the CEES HPC resources
 ---
-Paragraph of introductory material.
+These lessons are meant to get new users started with the CEES HPC resources, one or more of:
+
+* cod-nodes
+* abel CPU hours
+* disk storage connected to the cod nodes and abel
+* norstore disk storage
+
+See [our wiki](https://wiki.uio.no/mn/bio/cees-bioinf/index.php/Main_Page) for more information.
 
 > ## Prerequisites {.prereq}
 >
-> A short paragraph describing what learners need to know
-> before tackling this lesson.
+> You are expected to have access to some or all of the resources (see ['Getting access'](https://wiki.uio.no/mn/bio/cees-bioinf/index.php/Main_Page#Getting_access))
+> and a basic understanding of the unix shell. In short, these topics from the [Software Carpentry Unix Shell lessons](http://swcarpentry.github.io/shell-novice/) should be familiar to you: 
+> 
+> * [Files and Directories](http://swcarpentry.github.io/shell-novice/01-filedir.html)
+> * [Creating Things](http://swcarpentry.github.io/shell-novice/02-create.html)
+> * [Pipes and Filters](http://swcarpentry.github.io/shell-novice/03-pipefilter.html)
 
 > ## Getting ready {.getready}
 >
-> A short paragraph describing
-> what learners need to do before tackling this lesson.
+> You will need a PC/laptop with a terminal program, and internet connection. 
 
 ## Topics
 
-1.  [Topic Title One](01-one.html)
-2.  [Topic Title Two](02-two.html)
+1.  [Logging in for the first time](01-login.html)
+2.  [Accessing and using the cod nodes](02-codnodes.html)
 
 ## Other Resources
 
