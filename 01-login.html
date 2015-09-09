@@ -34,38 +34,73 @@
 </div>
 <div class="panel-body">
 <ul>
-<li>Learning objective 1</li>
-<li>Learning objective 2</li>
+<li>Log in to the abel computer cluster</li>
+<li>Locate the most important folders</li>
 </ul>
 </div>
 </section>
-<p>Paragraphs of text — possibly including <a href="reference.html#key-word-1">key word 1</a> — mixed with:</p>
-<pre class="sourceCode python"><code class="sourceCode python">some code:
-    to be displayed</code></pre>
-<pre class="output"><code>output
-from
-program</code></pre>
-<pre class="error"><code>error reports from program (if any)</code></pre>
-<p>and possibly including:</p>
+<!--- referencing other files: [key word 1](reference.html#key-word-1) --->
+<p>Let’s get started! Open your terminal program and write - replacing <code>username</code> with your UiO username:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">ssh</span> username@abel.uio.no</code></pre>
+<p>This should show something like this:</p>
+<pre class="output"><code>Last login: Wed Sep  9 11:47:54 2015 from bio91092.uio.no
+
+Welcome to Abel, a supercomputing service by UiO/USIT/UAV/ITF
+
+################################################################################
+
+IMPORTANT INFORMATION
+
+Abel login nodes run an automatic nice daemon so that your actions do not
+impact other user&#39;s interactive work.  Any process consuming more than 30
+minutes of CPU time on the login nodes will automatically be killed.
+
+Please note that files stored under the temporary area /work/users/$USER are
+deleted if older than 45 days. For more information please see:
+http://www.uio.no/english/services/it/research/hpc/abel/help/user-guide/data.html
+
+Help on various apects of using Abel can be found here:
+http://www.uio.no/english/services/it/research/hpc/abel/
+
+If you want to receive Abel operational information by e-mail you can subscribe
+to the abel-operations e-mail list by following this URL:
+https://sympa.uio.no/usit.uio.no/subscribe/abel-operations
+
+################################################################################
+
+[login-0-2 ~]$</code></pre>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
 <h2 id="callout-box"><span class="glyphicon glyphicon-pushpin"></span>Callout Box</h2>
 </div>
 <div class="panel-body">
-<p>An aside of some kind.</p>
+<p>If you logged in on the computer you run this command using the same username as on abel, you can skip the username: <code>ssh abel.uio.no</code>. If you are on the UiO network, you don’t have to write the <code>uio.no</code> part. So, you may be able to just write <code>ssh abel</code>!</p>
 </div>
 </aside>
-<p>or an image from the <code>figs</code> directory:</p>
-<div class="figure">
-<img src="fig/example.svg" title="this is the image&#39;s alt text" alt="this is the image’s title" />
-<p class="caption">this is the image’s title</p>
-</div>
-<section class="challenge panel panel-success">
+<p>Now let’s check who we are, and where we are:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">pwd</span></code></pre>
+<pre class="output"><code>/usit/abel/u1/username</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">whoami</span></code></pre>
+<p>This should return your username</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">hostname</span></code></pre>
+<pre class="output"><code>login-0-1.local</code></pre>
+<p>Here you can have either <code>login-0-1.local</code>, or <code>login-0-2.local</code>. This indicates there are two physical servers, so-called ‘login nodes’ and the system assigns one of them to you randomly.</p>
+<p>Let’s log out:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">exit</span></code></pre>
+<aside class="callout panel panel-info">
 <div class="panel-heading">
-<h2 id="challenge-title"><span class="glyphicon glyphicon-pencil"></span>Challenge Title</h2>
+<h2 id="callout-box-1"><span class="glyphicon glyphicon-pushpin"></span>Callout Box</h2>
 </div>
 <div class="panel-body">
-<p>Description of a single challenge. There may be several challenges.</p>
+<p>You can also type <code>logout</code>, or type the ctrl-key together with the <code>d</code> key.</p>
+</div>
+</aside>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="exercise"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
+</div>
+<div class="panel-body">
+<p>Log in and out a few times and notice which login server is assigned to you</p>
 </div>
 </section>
         </div>

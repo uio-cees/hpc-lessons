@@ -34,33 +34,67 @@
 </div>
 <div class="panel-body">
 <ul>
-<li>Learning objective 1</li>
-<li>Learning objective 2</li>
+<li>Log in to the cod nodes, check who is running jobs on it and how busy the node is</li>
+<li>Reserve the node for use</li>
+<li>Run a simple job on the node and follow its progress</li>
+<li>Start long-running jobs</li>
+<li>Follow progress of jobs and cancel them</li>
 </ul>
 </div>
 </section>
-<p>Paragraphs of text — possibly including <a href="reference.html#key-word-2">key word 2</a> — mixed with:</p>
-<pre class="sourceCode python"><code class="sourceCode python">some code:
-    to be displayed</code></pre>
-<pre class="output"><code>output
-from
-program</code></pre>
-<pre class="error"><code>error reports from program (if any)</code></pre>
-<p>and possibly including:</p>
+<p>Open your terminal program and write - replacing <code>username</code> with your UiO username:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">ssh</span> username@cod5.hpc.uio.no</code></pre>
+<p>This should show something like this:</p>
+<pre class="output"><code>Last login: Wed Sep  9 12:44:45 2015 from bio91092.uio.no
+  Research Computing Services, University of Oslo - ABEL
+  Info: http://hpc.uio.no/    Help: hpc-drift@usit.uio.no
+                           ,__
+                           |  `&#39;.
+        __           |`-._/_.:---`-.._
+        \=&#39;.       _/..--&#39;`__         `&#39;-._
+         \- &#39;-.--&quot;`      ===        /   o  `&#39;,
+          )= (                 .--_ |       _.&#39;
+         /_=.&#39;-._             {=_-_ |   .--`-.
+        /_.&#39;    `\`&#39;-._        &#39;-=   \    _.&#39;5
+                 )  _.-&#39;`&#39;-..       _..-&#39;`
+                /_.&#39;        `/&quot;;&#39;;`|
+                             \` .&#39;/
+                              &#39;--&#39;
+
+                     Welcome to cod5
+</code></pre>
+<p>Enjoy the ASCII fish, courtesy of USIT!</p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
 <h2 id="callout-box"><span class="glyphicon glyphicon-pushpin"></span>Callout Box</h2>
 </div>
 <div class="panel-body">
-<p>An aside of some kind.</p>
+<p>If you logged in on the computer you run this command using the same username as on abel, you can skip the username: <code>ssh cod5.hpc.uio.no</code>. While for abel, you can skip the uio.no part when you are on the UiO network, unfortunately, with the cod nodes, you will always have to write the <code>hpc.uio.no</code> part.</p>
 </div>
 </aside>
+<p>We are going to use a small script that writes some simple output to the screen, and allows us to control how long it runs. In an appropriate folder (e.g., your home folder), make a file called <code>rounds.sh</code> with the following text:</p>
+<pre><code>stop=$1
+seconds=$2
+for i in $(seq 1 $stop)
+    do
+    echo round $i of $stop
+    sleep $seconds
+done</code></pre>
+<p>This script will sleep (unix <code>sleep</code> command) a user-defined amount of times (variable <code>stop</code>) for a user-defined amount of seconds (variable <code>seconds</code>).</p>
+<p>Now make the script executable:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">chmod</span> u+x rounds.sh</code></pre>
+<p>And try it out:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">./rounds.sh</span> 3 2</code></pre>
+<pre class="output"><code>round 1 of 3
+round 2 of 3
+round 3 of 3</code></pre>
+<p>Here the script ran 3 <code>sleep</code> commands, which each took 2 seconds.</p>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2 id="challenge-title"><span class="glyphicon glyphicon-pencil"></span>Challenge Title</h2>
+<h2 id="exercise"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
 </div>
 <div class="panel-body">
-<p>Description of a single challenge. There may be several challenges that make reference to <a href="01-login.html#challenge-title">Challenge Title</a>.</p>
+<p>Run the script a few times using different settings for the number of rounds and seconds. If the script takes very long, cancel it using <code>ctrl-c</code></p>
 </div>
 </section>
         </div>
