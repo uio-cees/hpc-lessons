@@ -20,7 +20,7 @@ ssh username@abel.uio.no
 This should show something like this:
 
 ~~~ {.output}
-Last login: Wed Sep  9 11:47:54 2015 from bio91092.uio.no
+Last login: Wed Sep  9 11:47:54 2015 from bioxxxxx.uio.no
 
 Welcome to Abel, a supercomputing service by UiO/USIT/UAV/ITF
 
