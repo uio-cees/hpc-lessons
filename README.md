@@ -18,3 +18,6 @@ This instructional material is derived from the Software Carpentry lesson templa
 
 ### Editing tips
 See the FAQ at <https://github.com/swcarpentry/lesson-example/blob/gh-pages/FAQ.md>
+
+test_lex
+
