@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Using the CEES HPC resources
-subtitle: Accessing and using the cod nodes
+subtitle: Using the cod nodes
 minutes: 10
 ---
 > ## Learning Objectives {.objectives}
