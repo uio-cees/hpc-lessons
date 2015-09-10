@@ -87,4 +87,4 @@ exit
 
 > ## Exercise {.challenge}
 >
-> Log in and out a few times and notice which login server is assigned to you
+> Log in and out a few times and notice which login server is assigned to you.
