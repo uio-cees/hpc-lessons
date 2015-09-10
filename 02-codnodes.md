@@ -22,7 +22,7 @@ ssh username@cod5.hpc.uio.no
 This should show something like this:
 
 ~~~ {.output}
-Last login: Wed Sep  9 12:44:45 2015 from bio91092.uio.no
+Last login: Wed Sep  9 12:44:45 2015 from bioxxxxx.uio.no
   Research Computing Services, University of Oslo - ABEL
   Info: http://hpc.uio.no/    Help: hpc-drift@usit.uio.no
                            ,__
