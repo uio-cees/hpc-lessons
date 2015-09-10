@@ -20,6 +20,6 @@ subtitle: Instructor's Guide
 
 2.  Discussion of second challenge.
 
-## [Accessing and using the cod nodes](02-codnodes.html)
+## [Using the cod nodes](02-codnodes.html)
 
 *   Et cetera.

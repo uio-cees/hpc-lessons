@@ -27,7 +27,12 @@ See [our wiki](https://wiki.uio.no/mn/bio/cees-bioinf/index.php/Main_Page) for m
 ## Topics
 
 1.  [Logging in for the first time](01-login.html)
-2.  [Accessing and using the cod nodes](02-codnodes.html)
+2.  [Using the cod nodes](02-codnodes.html)
+3.  [Running jobs on abel](03-abeljobs.html)
+4.  [Input data and output data](04-datainout.html)
+5.  [Software use](05-software.html)
+6.  [Copying, moving and getting data](06-datahandling.html)
+7.  [More on abel and slurm scripts](07-abelslurm.html)
 
 ## Other Resources
 

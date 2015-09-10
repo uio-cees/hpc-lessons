@@ -7,7 +7,7 @@ subtitle: Reference
 
 ...commands and examples...
 
-## [Accessing and using the cod nodes](02-codnodes.html)
+## [Using the cod nodes](02-codnodes.html)
 
 ...commands and examples...
 
