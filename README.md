@@ -43,7 +43,16 @@ git checkout -b name_of_branch
 
 Note that this also switches you to your new branch.
 
-Now make the changes you want, and commit them. Once you're ready to submit a pull request, push your branch up to github:
+Now make the changes you want, and commit them. To preview the webpages, run these commands, which should finish without warnings:
+
+```
+make check
+make preview
+```
+
+Now you can check the html pages by opening them in your browser. Make sure to do this before you submit the pull request!
+
+Once you're ready to submit a pull request, push your branch up to github:
 
 ```
 git push
