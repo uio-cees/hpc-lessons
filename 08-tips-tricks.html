@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Tips and tricks</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">Tips and tricks</h1></a>
+          <h2 class="subtitle">Using the cod nodes</h2>
+          <p>WORK IN PROGRESS Based on a Late Lunch talk by Lex Nederbragt on November 2nd, 2015 entitled “Insider tips and tricks for using CEES HPC resources.”</p>
+<p>This material will modified, parts of it may end up in other lessons.</p>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<p>To be added</p>
+</div>
+</section>
+<h2 id="before-we-begin">Before we begin</h2>
+<p>We will use a set of files and folders to practice a bit. Please copy this folder to, for example, your home area on abel/cod nodes:</p>
+<p><code>/projects/cees/in_progress/lex/151102_cees-hpc_LLT</code></p>
+<h2 id="the-.bash_login-file">The <code>.bash_login</code> file</h2>
+<ul>
+<li>do you use your <code>.bash_login</code> file? It is located in your home area, so it is <code>~/.bash_login</code></li>
+<li>do you have the following lines in there? If not, you should!</li>
+</ul>
+<pre><code>export PATH=/projects/cees/scripts:/projects/cees/bin:$PATH
+umask 0002
+module use /projects/cees/bin/modules</code></pre>
+<p>These do the following: * make the scripts and commands in <code>/projects/cees/scripts</code> and <code>/projects/cees/bin</code> available to the shell * set default permissions * enable use of our local modules, confirm by typing <code>module avail</code></p>
+<p>Notice that in order to make these changes become effective, you have to either log out and back in, or execute the <code>.bash_login</code> file:</p>
+<pre><code>source ~/.bash_login</code></pre>
+<h3 id="aliases">Aliases</h3>
+<p>Shell aliases are short, single-word shell commands that really are much longer commands. They make your life easier. You put these in your <code>.bash_login</code> file.</p>
+<p>Some examples I use:</p>
+<pre><code>alias ll=&#39;ls -l&#39;
+alias lh=&#39;ls -lh&#39;
+alias la=&#39;ls -la&#39;
+alias lr=&#39;ls -ltr&#39;
+alias l1=&#39;ls -1&#39;
+alias cd..=&#39;cd ..&#39;</code></pre>
+<p>NOTE:</p>
+<ul>
+<li>do not use spaces around the ‘=’ sign</li>
+<li>make sure to put the long command in quotation marks</li>
+</ul>
+<p><strong>Exercise:</strong> put one or more of these aliases in your <code>.bash_login</code> file, execute the file and try the new alias(es) out on the files and folders you copied.</p>
+<p>I use the following aliases to make creating and uncompressing ‘tarballs’ easier:</p>
+<pre><code>alias maketar=&#39;tar -cvzf&#39;
+alias untar=&#39;tar -xvzf&#39;
+alias tarlist=&#39;tar -ztvf&#39;</code></pre>
+<p>(check out <a href="https://xkcd.com/1168/" class="uri">https://xkcd.com/1168/</a>)</p>
+<p>Do you ever need a random password quickly:</p>
+<pre><code>alias pw=&quot;tr -dc &#39;A-Za-z0-9!@#$%^&amp;*&#39; &lt; /dev/urandom | fold -w 12 | head -n 1&quot;</code></pre>
+<h3 id="shell-variables">Shell variables</h3>
+<p>Shell variables are containers for values. Some are builtin, such as $PWD, $HOME, $PATH and of course $PS1. But you can set any variable yourself. You can see all your variables by typing</p>
+<pre><code>env</code></pre>
+<p>In my <code>.bash_login</code> file, I also set a few variables to make my life easier:</p>
+<pre><code>cod5=cod5.hpc.uio.no
+cod6=cod6.hpc.uio.no
+cod7=cod7.hpc.uio.no</code></pre>
+<p>Now I can do this to log in to the cod nodes</p>
+<pre><code>ssh $cod5
+</code></pre>
+<p>Note how I don’t have to type my username, this is because I am logging in as the same username I need to use on the cod nodes.</p>
+<p>Oh, and when you are on the UiO network, you can log into able like this:</p>
+<pre><code>ssh abel</code></pre>
+<p>Instead of</p>
+<pre><code>ssh username@abel.uio.no</code></pre>
+<p>We’ll come back to why I don’t have to type my password…</p>
+<p>Other shell variable I use:</p>
+<pre><code>export D=/projects/cees/
+export I=/projects/cees/in_progress</code></pre>
+<p>Now I can do <code>cd $D</code> and <code>cd $I</code></p>
+<p>Finally, I have a function in my <code>.bash_login</code> file that creates a folder and does a <code>cd</code> into it in one go:</p>
+<pre><code>mkcd () {
+mkdir -p &quot;$*&quot;
+cd &quot;$*&quot;
+}</code></pre>
+<p>Now I can do:</p>
+<pre><code>mkcd new_foldername</code></pre>
+<p>instead of</p>
+<pre><code>mkdir new_foldername
+cd new_foldername</code></pre>
+<p><strong>Exercise:</strong> put the above function in your <code>.bash_login</code> file, execute the file and make a new folder using <code>mkcd</code>.</p>
+<p>Putting it all together, this may be a typical start of my work on abel or the cod nodes:</p>
+<pre><code>ssh $cod5
+cd $I/lex
+mkcd new_project</code></pre>
+<h3 id="the-prompt">The prompt</h3>
+<p>The prompt is the beginning of the line. For example, when you log into a cod node, you may see</p>
+<p><code>[username@hostname ~]</code></p>
+<p>Setting the prompt can be done by changing the PS1 variable, but it is a kind of special language you need to use. Let’s first check what it is right now:</p>
+<pre><code>echo $PS1</code></pre>
+<p>You may see this:</p>
+<p><code>[\u@\h \W]\$</code></p>
+<ul>
+<li><code>\u</code> is your username</li>
+<li><code>\h</code> is the name of the server</li>
+<li><code>\W</code> is the name of the current folder</li>
+</ul>
+<p>Without going into the details, you can modify as you like. Some people like to have the full path of the current folder, instead of just the current folder. Others like colours. Here are a few examples, please try them out. Use the <code>export PS1=''</code> with the desired settings in the quotations marks.</p>
+<pre><code>export PS1=&#39;[\h \W]$ &#39;
+export PS1=&#39;[\u@\h \W]\$ &#39;
+export PS1=&#39;\[\e[32;1m\](\[\e[37;0m\]UiO:\u@\h\[\e[32;1m\])-(\[\e[37;0m\]\w\[\e[32;1m\])\n$ \[\e[0m\]&#39;</code></pre>
+<p>NOTE:</p>
+<ul>
+<li>do not use spaces around the ‘=’ sign</li>
+<li>you may want to add a space at the end.</li>
+</ul>
+<p>Our wiki also has a nice one, see <a href="https://wiki.uio.no/mn/bio/cees-bioinf/index.php/User_manual_cod_nodes#Setting_up_your_environment" class="uri">https://wiki.uio.no/mn/bio/cees-bioinf/index.php/User_manual_cod_nodes#Setting_up_your_environment</a></p>
+<p>You can also design your prompt by using the ‘bashrcgenerator’ at <a href="http://bashrcgenerator.com/" class="uri">http://bashrcgenerator.com/</a>.</p>
+<p>Once you have selected your prompt, put the <code>export PS1=''</code> line in your <code>.bash_login</code> file and log out and back in.</p>
+<p>Finally, I use this in my <code>.bash_login</code> to visualise that I am in a screen:</p>
+<pre><code>if [ &quot;$TERM&quot; == &quot;screen&quot; ]; then
+    export PS1=[SCREEN]$PS1
+fi</code></pre>
+<h2 id="those-who-know-history-can-choose-to-repeat-it">Those Who Know History Can Choose to Repeat It</h2>
+<p>(quote from <a href="http://swcarpentry.github.io/shell-novice/04-loop.html" class="uri">http://swcarpentry.github.io/shell-novice/04-loop.html</a>)</p>
+<p>Simply typing <code>history</code> will show your last commands, up to 1000. You can repeat the <em>nth</em> command by typing <code>!</code> followed by the number:</p>
+<pre><code>!1013</code></pre>
+<p>And you can execute the last command with a certain word by typing, for example,</p>
+<pre><code>!ls</code></pre>
+<p>You can also use the arrow-up (and down) keys to scroll through your last commands.</p>
+<p>But the best tip I have is searching through your history by typing <code>ctrl-r</code>, followed by a few characters of the command you are looking for. Once you get some results, it may not be the right one, so you can type <code>ctrl-r</code> another time to have the search go even more back in the history (or <code>ctrl-shift-r</code> to move forward in the history). I use this <em>all the time</em> and it is a real time save.</p>
+<p>Another trick that I just recently learned and find myself using every day is <code>!$</code>. This repeats the last element of the previous command, for example:</p>
+<pre><code>ls /projects/cees/in_progress
+cd !$</code></pre>
+<p>The <code>!$</code> will expand to <code>/projects/cees/in_progress</code>:</p>
+<pre><code>cd /projects/cees/in_progress</code></pre>
+<p>I use this very often, as well as:</p>
+<pre><code>ls /projects/cees/in_progress/lex/somefile.txt
+less !$</code></pre>
+<h2 id="viewing-files-aka-less-is-more">Viewing files (aka less is more)</h2>
+<p>The <code>less</code> command is really powerful. For this part, we will use a file with demographic data that is part of the files you copied:</p>
+<pre><code>head gapminderData/gapminderDataFiveYear.txt
+country year    pop continent   lifeExp gdpPercap
+Afghanistan 1952    8425333 Asia    28.801  779.4453145
+Afghanistan 1957    9240934 Asia    30.332  820.8530296
+Afghanistan 1962    10267083    Asia    31.997  853.10071
+Afghanistan 1967    11537966    Asia    34.02   836.1971382
+Afghanistan 1972    13079460    Asia    36.088  739.9811058
+Afghanistan 1977    14880372    Asia    38.438  786.11336
+Afghanistan 1982    12881816    Asia    39.854  978.0114388
+Afghanistan 1987    13867957    Asia    40.822  852.3959448
+Afghanistan 1992    16317921    Asia    41.674  649.3413952</code></pre>
+<p>(see <a href="http://www.gapminder.org/world" class="uri">http://www.gapminder.org/world</a> for the origin of this data)</p>
+<h3 id="moving-about-with-less">Moving about with less</h3>
+<ul>
+<li>type <code>shift-G</code> to move to the end. Very useful for for example log files, or when you do <code>history|less</code></li>
+<li>type <code>g</code> to go to the beginning of the file</li>
+</ul>
+<h3 id="searching-with-less">Searching with less</h3>
+<ul>
+<li>after you type <code>less</code>, type a forward slash <code>/</code> and a search text. The line where the search text was first found will be at the top of your screen</li>
+<li>type <code>n</code> to go to the next hit or <code>shift-n</code> for the previous one</li>
+<li>make the search case-insensitive by using <code>less -i</code></li>
+</ul>
+<p><strong>Exercise:</strong> try this out by searching (using <code>less)</code> in the <code>gapminderDataFiveYear.txt</code> file in the <code>gapminderData</code> folder</p>
+<ul>
+<li>search for ‘Norway’ and other countries</li>
+<li>search occurrences of ‘2007’</li>
+<li>search for ‘norway’ (lower case!)</li>
+</ul>
+<h3 id="getting-to-know-your-files-better">Getting to know your files better</h3>
+<p>Giving the <code>cat</code> command the <code>-t</code> flag will show tabs by replacing them with <code>^I</code>.</p>
+<pre><code>cat -t gapminderData/gapminderDataFiveYear.txt |head
+country^Iyear^Ipop^Icontinent^IlifeExp^IgdpPercap
+Afghanistan^I1952^I8425333^IAsia^I28.801^I779.4453145
+Afghanistan^I1957^I9240934^IAsia^I30.332^I820.8530296
+Afghanistan^I1962^I10267083^IAsia^I31.997^I853.10071
+Afghanistan^I1967^I11537966^IAsia^I34.02^I836.1971382
+Afghanistan^I1972^I13079460^IAsia^I36.088^I739.9811058
+Afghanistan^I1977^I14880372^IAsia^I38.438^I786.11336
+Afghanistan^I1982^I12881816^IAsia^I39.854^I978.0114388
+Afghanistan^I1987^I13867957^IAsia^I40.822^I852.3959448
+Afghanistan^I1992^I16317921^IAsia^I41.674^I649.3413952</code></pre>
+<p>Giving the <code>cat</code> command the <code>-n</code> flag will show line numbers:</p>
+<pre><code>cat -n gapminderData/gapminderDataFiveYear.txt | head
+     1  country year    pop continent   lifeExp gdpPercap
+     2  Afghanistan 1952    8425333 Asia    28.801  779.4453145
+     3  Afghanistan 1957    9240934 Asia    30.332  820.8530296
+     4  Afghanistan 1962    10267083    Asia    31.997  853.10071
+     5  Afghanistan 1967    11537966    Asia    34.02   836.1971382
+     6  Afghanistan 1972    13079460    Asia    36.088  739.9811058
+     7  Afghanistan 1977    14880372    Asia    38.438  786.11336
+     8  Afghanistan 1982    12881816    Asia    39.854  978.0114388
+     9  Afghanistan 1987    13867957    Asia    40.822  852.3959448
+    10  Afghanistan 1992    16317921    Asia    41.674  649.3413952</code></pre>
+<p>Using <code>cat -e</code> will show line endings:</p>
+<pre><code>cat -e gapminderData/gapminderDataFiveYear.txt |head
+country year    pop continent   lifeExp gdpPercap$
+Afghanistan 1952    8425333 Asia    28.801  779.4453145$
+Afghanistan 1957    9240934 Asia    30.332  820.8530296$
+Afghanistan 1962    10267083    Asia    31.997  853.10071$
+Afghanistan 1967    11537966    Asia    34.02   836.1971382$
+Afghanistan 1972    13079460    Asia    36.088  739.9811058$
+Afghanistan 1977    14880372    Asia    38.438  786.11336$
+Afghanistan 1982    12881816    Asia    39.854  978.0114388$
+Afghanistan 1987    13867957    Asia    40.822  852.3959448$
+Afghanistan 1992    16317921    Asia    41.674  649.3413952$</code></pre>
+<p><strong>Exercise:</strong> What is ‘wrong’ with the <code>barcode/barcode.fasta</code> file?</p>
+<p>If your terminal window is not very wide, using <code>less</code> on a file with long lines may cause the lines to wrap around, for example with:</p>
+<pre><code>less velvet/stats.txt</code></pre>
+<p>By using <code>less -S</code> you avoid the wrapping, and you can use the left and right arrow keys to view the rest of the line, e.g. scrolling through it horizontally:</p>
+<pre><code>less -S velvet/stats.txt</code></pre>
+<p><strong>Exercise:</strong> Try <code>less</code> with and without <code>-S</code> on the <code>sam/somefile.sam</code> file</p>
+<p>Columnar files viewed with <code>cat</code> or <code>less</code>, in which the text in the different rows is of unequal length, may not line up, as for example here:</p>
+<pre><code>head gapminderData/gapminderDataFiveYear.txt
+country year    pop continent   lifeExp gdpPercap
+Afghanistan 1952    8425333 Asia    28.801  779.4453145
+Afghanistan 1957    9240934 Asia    30.332  820.8530296
+Afghanistan 1962    10267083    Asia    31.997  853.10071
+Afghanistan 1967    11537966    Asia    34.02   836.1971382
+Afghanistan 1972    13079460    Asia    36.088  739.9811058
+Afghanistan 1977    14880372    Asia    38.438  786.11336
+Afghanistan 1982    12881816    Asia    39.854  978.0114388
+Afghanistan 1987    13867957    Asia    40.822  852.3959448
+Afghanistan 1992    16317921    Asia    41.674  649.3413952</code></pre>
+<p>By using the <code>column</code> command, with the <code>-t</code> flag (for ‘create a table’), you will get nicely aligned columns:</p>
+<pre><code>column -t gapminderData/gapminderDataFiveYear.txt | head
+country        year      pop               continent  lifeExp   gdpPercap
+Afghanistan    1952      8425333           Asia       28.801    779.4453145
+Afghanistan    1957      9240934           Asia       30.332    820.8530296
+Afghanistan    1962      10267083          Asia       31.997    853.10071
+Afghanistan    1967      11537966          Asia       34.02     836.1971382
+Afghanistan    1972      13079460          Asia       36.088    739.9811058
+Afghanistan    1977      14880372          Asia       38.438    786.11336
+Afghanistan    1982      12881816          Asia       39.854    978.0114388
+Afghanistan    1987      13867957          Asia       40.822    852.3959448
+Afghanistan    1992      16317921          Asia       41.674    649.3413952</code></pre>
+<p>Sometimes this is not enough, though, for example try this out on the <code>velvet/stats.txt</code> with a not too wide terminal window</p>
+<p>Combining column -t and less -S makes for a nicely formatted table you can browse through using the arrow keys:</p>
+<pre><code>column -t velvet/stats.txt | less -S</code></pre>
+<p>Magic!</p>
+<p>One final thing: if your data is tab separates, you can force <code>column</code> to use tabs instead of spaces by running</p>
+<pre><code>column -t -s $&#39;\t&#39; file.txt</code></pre>
+<h2 id="finding-files-and-looping-over-them">Finding files and looping over them</h2>
+<p>[Inspired by the Software Carpentry lesson on the <code>find</code> command, at <a href="http://swcarpentry.github.io/shell-novice/06-find.html" class="uri">http://swcarpentry.github.io/shell-novice/06-find.html</a>]</p>
+<p>If you are in the folder with material for this lesson, and you run <code>ls</code> you should see</p>
+<pre><code>barcode  gapminderData  sam  velvet</code></pre>
+<p>How can we show all files in the folder? Try <code>ls *</code>:</p>
+<pre><code>ls *
+barcode:
+barcode.fasta
+
+gapminderData:
+gapminderDataFiveYear.txt
+
+sam:
+somefile.sam
+
+velvet:
+stats.txt  temp</code></pre>
+<p>Let’s add the <code>-F</code> flag to make <code>ls</code> show what are the folders:</p>
+<pre><code>ls -F *
+barcode:
+barcode.fasta
+
+gapminderData:
+gapminderDataFiveYear.txt
+
+sam:
+somefile.sam
+
+velvet:
+stats.txt  temp/</code></pre>
+<p>We are almost there, as there is a folder <code>temp</code> in the <code>velvet</code> folder. Does it have files in it?</p>
+<pre><code>ls -F velvet/temp/
+temp.txt</code></pre>
+<p>An easier way, especially if you have many files and folders, to get all files and folders is by using the <code>find</code> command:</p>
+<pre><code>find .
+.
+./velvet
+./velvet/stats.txt
+./velvet/temp
+./velvet/temp/temp.txt
+./gapminderData
+./gapminderData/gapminderDataFiveYear.txt
+./sam
+./sam/somefile.sam
+./barcode
+./barcode/barcode.fasta</code></pre>
+<p>Note we use the <code>.</code> here to indicate the current folder. You can also give the <code>find</code> command the path to another folder.</p>
+<p>We can restrict the output to folders only:</p>
+<p><code>find . -type d . ./velvet ./velvet/temp ./gapminderData ./sam ./barcode</code></p>
+<p>Or to files only:</p>
+<pre><code>find . -type f
+./velvet/stats.txt
+./velvet/temp/temp.txt
+./gapminderData/gapminderDataFiveYear.txt
+./sam/somefile.sam
+./barcode/barcode.fasta</code></pre>
+<p>The <code>find</code> command does not get it’s name from this listing of files and folders alone, but from the possibility to locate locate files (or folders):</p>
+<pre><code>find . -name *.txt
+./velvet/stats.txt
+./velvet/temp/temp.txt
+./gapminderData/gapminderDataFiveYear.txt</code></pre>
+<p>This nicely selects only the files which end in <code>.txt</code>. There is one problem, though, which you can see by doing this:</p>
+<pre><code>touch emptyfile.txt
+find . -name *.txt
+./emptyfile.txt</code></pre>
+<p>The problem is that the shell expands wildcard characters like <code>*</code> before commands are run. Since <code>*.txt</code> in the current directory expands to <code>emptyfile.txt</code>, the command we actually ran was:</p>
+<pre><code>find . -name emptyfile.txt</code></pre>
+<p>The fix is easy:</p>
+<pre><code>find . -name &quot;*.txt&quot;
+./velvet/stats.txt
+./velvet/temp/temp.txt
+./gapminderData/gapminderDataFiveYear.txt
+./emptyfile.txt</code></pre>
+<p>I recommend to <em>always put quotation marks</em> around the <code>find</code> command.</p>
+<p>You can restrict the depth of searching in the file tree with <code>-maxdepth</code>, e.g.</p>
+<pre><code>find . -maxdepth 2 -name &#39;*.txt&#39;
+./velvet/stats.txt
+./gapminderData/gapminderDataFiveYear.txt
+./emptyfile.txt</code></pre>
+<p>Note how the <code>velvet/temp/temp.txt</code> file is no longer listed as it was 3 levels deep.</p>
+<p>Now, let’s do something with the found files by looking at the number of lines each one has:</p>
+<pre><code>find . -name &#39;*.txt&#39; | xargs wc -l
+   672 ./velvet/stats.txt
+     0 ./velvet/temp/temp.txt
+  1705 ./gapminderData/gapminderDataFiveYear.txt
+     0 ./emptyfile.txt
+  2377 total</code></pre>
+<p><code>xargs</code> will run the command following it on all lines of input piped into it.</p>
+<p>Thus, we can also look at file sizes this way:</p>
+<pre><code>find . -name &#39;*.txt&#39; | xargs du -hs
+64K ./velvet/stats.txt
+0   ./velvet/temp/temp.txt
+96K ./gapminderData/gapminderDataFiveYear.txt
+0   ./emptyfile.txt</code></pre>
+<p>If you are comfortable with using for loops in the shell, you can loop over the output of <code>find</code>:</p>
+<pre><code>for f in $(find . -name &#39;*.txt&#39;); do wc -l $f; done
+672 ./velvet/stats.txt
+0 ./velvet/temp/temp.txt
+1705 ./gapminderData/gapminderDataFiveYear.txt
+0 ./emptyfile.txt</code></pre>
+<p><strong>Exercise</strong> compare the use of <code>xargs</code> and the <code>for</code> loop, and explain why the output is different.</p>
+<p>Answer: the <code>xargs</code> variant effectively runs this:</p>
+<pre><code>wc -l ./velvet/stats.txt ./velvet/temp/temp.txt ./gapminderData/gapminderDataFiveYear.txt</code></pre>
+<p>The <code>wc</code> command always prints the total number of lines at the end if more than one input file was given.</p>
+<p>The <code>for</code> loop variant effectively runs these commands:</p>
+<pre><code>wc -l ./velvet/stats.txt
+wc -l ./velvet/temp/temp.txt
+wc -l ./gapminderData/gapminderDataFiveYear.txt</code></pre>
+<p>Here each invocation of <code>wc</code> is only on one file, so there is not total given.</p>
+<h2 id="cpus-memory-running-time">CPUs, memory, running time</h2>
+<h3 id="the-top-command">The <code>top</code> command</h3>
+<p>You may know the <code>top</code>, command, but not be aware of it’s many uses.</p>
+<ul>
+<li>type <code>top</code> and within top, type <code>u</code> and your username (or someone else’s) to show only processes for that username</li>
+<li>you can also use <code>top -u username</code></li>
+<li>within <code>top</code>, type <code>shift-f</code> to sort processes by different columns, for example memory usage (<code>N</code>)</li>
+<li>to have the output of <code>top</code> be sent to the screen without going ‘into’ <code>top</code>, type:</li>
+</ul>
+<pre><code>top -b -n 1 -u alexajo&#39;</code></pre>
+<ul>
+<li><code>-b</code> batch mode, send to stdout instead of entering <code>top</code></li>
+<li><code>-n 1</code> Number of iterations (here: just once)</li>
+</ul>
+<p>I sometimes want to log the <code>top</code> output to a file for a long running job to see which steps used the most CPU or memory:</p>
+<pre><code>top -b -d 900 -u alexajo &gt;top_output.txt</code></pre>
+<ul>
+<li><code>-d</code> delay, waiting time in seconds between each output (here 15 minutes)</li>
+<li>this will run until cancelled</li>
+</ul>
+<p>I either use a separate <code>screen</code> for this, or I do:</p>
+<pre><code>top -b -d 900 -u alexajo &gt;top_output.txt&amp;
+start_long_running_command</code></pre>
+<p>The <code>&amp;</code> makes the <code>top</code> command go into the background, and allows executing more commands.</p>
+<p>Finally, to get a quick view of how busy a node is, use</p>
+<pre><code>uptime
+ 11:53:14 up 38 days, 7 min, 18 users,  load average: 25.62, 27.67, 29.27</code></pre>
+<p>This will give the first line of the <code>top</code> output. It says how long the node has been running since the last restart, how many users are logged in, and the load, roughly the average number of CPUs busy during the last one, five, and fifteen minutes.</p>
+<h3 id="runtime-and-maximum-memory-usage">Runtime and maximum memory usage</h3>
+<p>The easiest way to log the amount of time a process used is by running the <code>time</code> command in front of your command:</p>
+<pre><code>time your_command</code></pre>
+<p>Let’s try it out, but having the shell wait 3 seconds:</p>
+<pre><code>time sleep 3
+
+real    0m3.061s
+user    0m0.001s
+sys 0m0.003s</code></pre>
+<ul>
+<li><code>real</code> the elapsed real time between (‘clock’ time)</li>
+<li><code>user</code> the user CPU time</li>
+<li><code>sys</code> the system CPU time</li>
+</ul>
+<p>When the command uses multiple CPUs, <code>user</code> time may be higher than <code>real</code> time. For a more detailed explanation, see <a href="http://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1" class="uri">http://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1</a></p>
+<p>An alternative logging command is to use <code>/usr/bin/time</code> instead of <code>time</code>:</p>
+<pre><code>/usr/bin/time sleep 3
+0.00user 0.00system 0:03.01elapsed 0%CPU (0avgtext+0avgdata 600maxresident)k
+0inputs+0outputs (0major+180minor)pagefaults 0swaps</code></pre>
+<p>Here <code>maxresident</code> is the <em>maximum</em> amount of memory the process used (in kilobytes), this may be useful to determine how much memory to reserve for such a process. To get a full, detailed output, add the <code>-v</code> flag to <code>/usr/bin/time</code>. More details at <a href="http://www.linuxintheshell.org/2013/02/26/episode-024-time-and-usrbintime/" class="uri">http://www.linuxintheshell.org/2013/02/26/episode-024-time-and-usrbintime/</a></p>
+<h3 id="memory-useage">Memory useage</h3>
+<p>To see how much memory is used by a node, run <code>free -g</code>:</p>
+<pre><code>free -g
+             total       used       free     shared    buffers     cached
+Mem:          1514       1418         96          0          0       1307
+-/+ buffers/cache:        110       1404
+Swap:            9          0          9</code></pre>
+<p>I find the first line not to be informative, but the second one (labelled <code>-/+ buffers/cache:</code>) is useful: the <code>used</code> number represents to total used memory.</p>
+<h3 id="putting-it-all-together">Putting it all together</h3>
+<p>After logging in to a node, a quick overview of how busy it is can be obtained by</p>
+<pre><code>uptime
+free -g</code></pre>
+<p><strong>Exercise:</strong> run these commands on the cod nodes and on abel</p>
+<h2 id="setting-up-password-less-ssh-login">Setting up password-less ssh login</h2>
+<p>See these instructions: <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2" class="uri">https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2</a></p>
+<h2 id="abel">Abel</h2>
+<p>The <code>squeue</code> command will list <em>all</em> running jobs. To list your jobs only, use:</p>
+<pre><code>squeue -u alexajo</code></pre>
+<p>To list jobs for one particular project only, e.g. our <code>nn9244k</code> allocation:</p>
+<pre><code>squeue -A nn9244k</code></pre>
+<p>In my <code>.bash_login</code> file I have</p>
+<pre><code>alias sq=&#39;squeue -u alexajo&#39;</code></pre>
+<p>To get all porribole information about a running job, use</p>
+<pre><code>scontrol show job JOBID</code></pre>
+<p>(replace JOBID with the ID of the job of interest)</p>
+<p>To see how busy abel is, type <code>qsumm</code>. Below are the first 10 lines of the output:</p>
+<pre><code>qsumm  | head
+Account        Limit  nRun nPend  lRun lPend
+--------------------------------------------
+akvaforsk         48     1     .     .     .
+atlas-low       2500     .     .   768   497
+cees             256     8     .     .     .
+cicero           256   177     .     .     .
+Sum cmbn          64    25     .     .     .
+ cmbn             64    25     .     .     .
+ cmbnp            64     .     .     .     .
+geofag           206     .     .     .     .</code></pre>
+<p>Here is the end of the output:</p>
+<pre><code>qsumm | tail
+ xa9911k        9075     .     .     .     .
+nrr              128     .     .     .     .
+nsc               48    21    54     .     .
+quiet            260     .     .     .     .
+staff          10000    82     .     .     .
+test            5000     .     .     .     .
+trocks           320   274     .     .     .
+uio              527   238   166   192    64
+--------------------------------------------
+Total sum      11428  7855 20683  1437   833</code></pre>
+<p>This is the data for our <code>nn9244k</code> project:</p>
+<pre><code>qsumm | grep nn9244k
+ nn9244k        9075   362     9     .     .</code></pre>
+<p>Explanation of the columns, obtained by running <code>qsumm --help</code>:</p>
+<ul>
+<li><code>Limit</code> the limit of how many cores the account can use at a time (note that all notur projects have the same number, currently 9075)</li>
+<li><code>nRun</code> the number of cores currently used by normal priority jobs</li>
+<li><code>nPend</code> the number of cores in queue for normal priority jobs</li>
+<li><code>lRun</code> and <code>lPend</code> the number of cores currently used and in the queue by lowpri jobs. Check <a href="http://www.uio.no/english/services/it/research/hpc/abel/help/user-guide/job-scripts.html#The_Lowpri_QoS">this link</a> for information on lowpri.</li>
+</ul>
+<p>By default, <code>qsumm</code> will show the number of CPUs (cores). By adding <code>--pe</code> (or simply <code>-p</code>), <code>qsumm</code> displays so-called Processor Equivalents instead. From the help text:</p>
+<blockquote>
+<p>Processor Equivalents (PEs) take the memory usage of a job into account: jobs with <code>--mem-per-cpu</code> larger than approximately 2GB will have #PEs &gt; #cores. (Note that the PE displayed in qsumm is an approximation of the PE used by the scheduler.)</p>
+</blockquote>
+<pre><code>qsumm --pe | head
+Account        Limit  nRun nPend  lRun lPend
+--------------------------------------------
+akvaforsk         48     1     .     .     .
+atlas-low       2500     .     .   756   543
+cees             256     8     .     .     .
+cicero           256   235     .     .     .
+Sum cmbn          64    26     .     .     .
+ cmbn             64    26     .     .     .
+ cmbnp            64     .     .     .     .
+geofag           206     .     .     .     .</code></pre>
+<p>This has to do with the fact that jobs requesting more memory are accounted in CPU hours proportionally to the amount of memory they use, with around one hour using 4 GB of memory representing one CPU hour. So, reserving a full Abel node of 64 GB RAM counts, even if you only use 1 CPU on it, as 64/16=16 CPUs. Using the full 1TB of a hugemem node counts as 1024/4=256 CPUs!</p>
+<pre><code>alias qs=&quot;qsumm -p|awk &#39;NR==1||/Sum uio/||/nsc/||/notur/||/nn9244k/||/cees/||/Total/&#39;&quot;</code></pre>
+<p>Finally, to check how many hours we have left on the <code>nn9244k</code> project, use the <code>cost</code> command:</p>
+<pre><code>cost -p nn9244k
+Report for account nn9244k on abel.uio.no
+Allocation period 2015.2 (start Thu Oct 01 00:00:01 2015)
+             (end Thu Mar 31 23:59:59 2016)
+Last updated on Mon Nov 02 11:31:58 2015
+==================================================
+Account                                 Core hours
+==================================================
+nn9244k            avail                3909376.93
+nn9244k            usage                 935087.07
+nn9244k            reserved              155536.00
+nn9244k            quota (pri)          5000000.00
+nn9244k            quota (unpri)                NA
+==================================================</code></pre>
+<p>If you induced <code>--detail</code>, you’ll get a breakdown by user.</p>
+<h2 id="tips-for-mac-users">Tips for MAC users</h2>
+<p>If you use a MAC, there arte two nice ways to open files using the terminal:</p>
+<ul>
+<li>using the built-in terminal application, you can on <em>the local harddisk</em>, type <code>open</code> followed by a filename (or path to a file) and it will open in the associated program, e.g.</li>
+</ul>
+<pre><code>open Documents/thesis/draft.docx</code></pre>
+<p>this will open <code>draft.docx</code> in Microsoft Word.</p>
+<p>To choose a different program to open a file, use the <code>-a</code> flag:</p>
+<pre><code>open Documents/thesis/draft.docx -a preview</code></pre>
+<p>Will open the file in the Preview application instead.</p>
+<p>I use <a href="https://www.iterm2.com/">iTerm2</a> instead of terminal.app. One reason is this: if there is a filename in the iTerm2 window, I can command-click on it (press the <code>command</code> key and click with the mouse) and it will open!</p>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="wiki.uio.no/mn/bio/cees-bioinf/index.php/Main_Page">Wiki</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
