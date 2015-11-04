@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Using the CEES HPC resources</title>
+    <title>CEES-HPC: Using the CEES HPC resources</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
     <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <link rel="alternate" type="application/rss+xml" title="CEES news" href="http://www.mn.uio.no/cees/english/research/news/cees/?vrtx=feed"/>
     <meta charset="UTF-8" />
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
   <body class="lesson">
     <div class="container card">
       <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
+        <a href="https://github.com/uio-cees/hpc/wiki" title="CEES-HPC">
           <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
         </a>
       </div>
@@ -43,7 +43,7 @@
 </div>
 </section>
 <p>Open your terminal program and write - replacing <code>username</code> with your UiO username:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">ssh</span> username@cod5.hpc.uio.no</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">ssh</span> username@cod5.hpc.uio.no</code></pre></div>
 <p>This should show something like this:</p>
 <pre class="output"><code>Last login: Wed Sep  9 12:44:45 2015 from bioxxxxx.uio.no
   Research Computing Services, University of Oslo - ABEL
@@ -82,9 +82,9 @@ for i in $(seq 1 $stop)
 done</code></pre>
 <p>This script will sleep (unix <code>sleep</code> command) a user-defined amount of times (variable <code>stop</code>) for a user-defined amount of seconds (variable <code>seconds</code>).</p>
 <p>Now make the script executable:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">chmod</span> u+x rounds.sh</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">chmod</span> u+x rounds.sh</code></pre></div>
 <p>And try it out:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">./rounds.sh</span> 3 2</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">./rounds.sh</span> 3 2</code></pre></div>
 <pre class="output"><code>round 1 of 3
 round 2 of 3
 round 3 of 3</code></pre>
@@ -101,8 +101,8 @@ round 3 of 3</code></pre>
       </div>
       </article>
       <div class="footer">
-        <a class="label swc-blue-bg" href="wiki.uio.no/mn/bio/cees-bioinf/index.php/Main_Page">Wiki</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="https://github.com/uio-cees/hpc/wiki">Wiki</a>
+        <a class="label swc-blue-bg" href="https://github.com/uio-cees/hpc-lessons">Source</a>
         <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
