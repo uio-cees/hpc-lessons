@@ -38,7 +38,7 @@
 <li>Reserve the node for use</li>
 <li>Run a simple job on the node and follow its progress</li>
 <li>Start long-running jobs</li>
-<li>Follow progress of jobs and cancel them</li>
+<li>Cancelling jobs</li>
 </ul>
 </div>
 </section>
@@ -66,21 +66,122 @@
 <p>Enjoy the ASCII fish, courtesy of USIT!</p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
-<h2 id="callout-box"><span class="glyphicon glyphicon-pushpin"></span>Callout Box</h2>
+<h2 id="skipping-your-username"><span class="glyphicon glyphicon-pushpin"></span>Skipping your username</h2>
 </div>
 <div class="panel-body">
-<p>If you logged in on the computer you run this command using the same username as on abel, you can skip the username: <code>ssh cod5.hpc.uio.no</code>. While for abel, you can skip the uio.no part when you are on the UiO network, unfortunately, with the cod nodes, you will always have to write the <code>hpc.uio.no</code> part.</p>
+<p>If you logged in on the computer you run this command using the same username as on the cod nodes or abel, you can skip the username: <code>ssh cod5.hpc.uio.no</code>. For abel, you can even skip the <code>uio.no</code> part when you are on the UiO network and simply type <code>ssh abel</code>. Unfortunately, with the cod nodes, you will always have to write the <code>hpc.uio.no</code> part.</p>
 </div>
 </aside>
-<p>We are going to use a small script that writes some simple output to the screen, and allows us to control how long it runs. In an appropriate folder (e.g., your home folder), make a file called <code>rounds.sh</code> with the following text:</p>
-<pre><code>stop=$1
+<h3 id="checking-node-usage">Checking node usage</h3>
+<p>Let’s see how busy the node is. Write this command:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">top</span></code></pre></div>
+<p>You are presented with an output similar to (but not identical with) this:</p>
+<pre class="output"><code>top - 08:01:08 up 22 days, 16:27,  4 users,  load average: 6.62, 6.96, 7.50
+Tasks: 1997 total,   2 running, 1994 sleeping,   1 stopped,   0 zombie
+Cpu(s): 10.9%us,  0.1%sy,  0.0%ni, 89.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Mem:  1588217204k total, 1048199928k used, 540017276k free,   310708k buffers
+Swap: 10485756k total,   318964k used, 10166792k free, 963947960k cached
+
+   PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+  8125 hannibal  20   0  907m 214m 186m S 595.9  0.0  14435:09 blastx
+ 73043 superman  20   0 48.7g  48g 508m R 100.0  3.2   3309:44 samtoh5
+ 75259 username  20   0 31144 2956 1092 R  1.6  0.0   0:00.21 top
+ 75260 root      20   0  105m 4496 3368 S  1.3  0.0   0:00.04 sshd
+ 14786 root      20   0  491m 4296 1020 S  0.3  0.0 107:08.12 collectd
+ 30359 smrtpersn 20   0 4726m 341m 5408 S  0.3  0.0  58:39.62 jsvc
+     1 root      20   0 27740 1384 1152 S  0.0  0.0   3:51.23 init
+     2 root      20   0     0    0    0 S  0.0  0.0   0:00.23 kthreadd
+     3 root      RT   0     0    0    0 S  0.0  0.0  96:08.17 migration/0
+     4 root      20   0     0    0    0 S  0.0  0.0   0:31.94 ksoftirqd/0
+     5 root      RT   0     0    0    0 S  0.0  0.0   0:00.00 stopper/0
+     6 root      RT   0     0    0    0 S  0.0  0.0   4:16.09 watchdog/0
+     7 root      RT   0     0    0    0 S  0.0  0.0  90:52.10 migration/1
+     8 root      RT   0     0    0    0 S  0.0  0.0   0:00.00 stopper/1
+     9 root      20   0     0    0    0 S  0.0  0.0   8:30.06 ksoftirqd/1
+    10 root      RT   0     0    0    0 S  0.0  0.0   3:42.04 watchdog/1
+    11 root      RT   0     0    0    0 S  0.0  0.0  93:12.74 migration/2</code></pre>
+<p>The content will refresh itself every few seconds. To get back to the command line, press the <code>q</code> key</p>
+<p>Here is a description of the different parts:</p>
+<pre class="output"><code>top - 08:01:08 up 22 days, 16:27,  4 users,  load average: 6.62, 6.96, 7.50</code></pre>
+<p>This first line explains how long the node has been running since the last restart, how many users are logged in, and the load, roughly the average number of CPUs busy during the last one, five, and fifteen minutes.</p>
+<pre class="output"><code>Tasks: 1997 total,   2 running, 1994 sleeping,   1 stopped,   0 zombie</code></pre>
+<p>The next line lists the number of tasks (or processes) and their state: total, running, sleeping (blocked or waiting for something) stopped or <a href="https://en.wikipedia.org/wiki/Zombie_process">zombie</a>.</p>
+<pre class="output"><code>Cpu(s): 10.9%us,  0.1%sy,  0.0%ni, 89.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st</code></pre>
+<p>The first number represents the percentage the CPUs are busy for the different user processes. An explanation of the other numbers can be found <a href="http://www.unixtutorial.org/commands/top/">here</a> (look for ‘CPU(s) status’).</p>
+<pre class="output"><code>Mem:  1588217204k total, 1048199928k used, 540017276k free,   310708k buffers
+Swap: 10485756k total,   318964k used, 10166792k free, 963947960k cached</code></pre>
+<p>These lines describe memory usage and swap usage. The first line is a but misleading as it also represent virtual memory, which is available to other programs if needed. See the ‘tips and tricks’ lesson for more details.</p>
+<p>Swap memory is define <a href="https://www.centos.org/docs/5/html/5.2/Deployment_Guide/s1-swap-what-is.html">here</a>:</p>
+<blockquote>
+<p>Swap space in Linux is used when the amount of physical memory (RAM) is full. If the system needs more memory resources and the RAM is full, inactive pages in memory are moved to the swap space. […] Swap space is located on hard drives, which have a slower access time than physical memory.</p>
+</blockquote>
+<p>The second part of the <code>top</code> output shows the most active user processes.</p>
+<pre class="output"><code>   PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+  8125 hannibal  20   0  907m 214m 186m S 595.9  0.0  14435:09 blastx
+ 73043 superman  20   0 48.7g  48g 508m R 100.0  3.2   3309:44 samtoh5
+ 75259 username  20   0 31144 2956 1092 R  1.6  0.0   0:00.21 top
+...
+...</code></pre>
+<p>Explanation of the different columns:</p>
+<ul>
+<li><code>PID</code> – process ID, a unique number for each process</li>
+<li><code>USER</code> – username for the owner of each process</li>
+<li><code>PR</code> and <code>NI</code> – deal with ‘priority’ in the internal unix queueing system for access to the CPU</li>
+<li><code>VIRT</code>, <code>RES</code>, <code>SHR</code> – deal with memory usage. <code>RES</code> stands for the <em>resident part</em> of a process – how much of it resides in the physical memory and this number is most relevant for the actual memory usage of processes. <code>VIRT</code> stands for <em>virtual</em> size, and ‘represents how much memory the program is able to access at the present moment’. <code>SHR</code> can be ignore. For more details, see for example <a href="http://mugurel.sumanariu.ro/linux/the-difference-among-virt-res-and-shr-in-top-output/">this explanation</a></li>
+<li><code>S</code> – the current state of each process: <code>R</code> = running, <code>S</code> = sleeping, <code>D</code> = uninterruptible sleep, <code>T</code> = traced or stopped, <code>Z</code> = zombie</li>
+<li><code>%CPU</code> – percentage of the time CPU spends running a particular process. Note that 100% represents one CPU in full use, so the <code>blastx</code> process in the example above uses the equivalent of almost 6 CPUs</li>
+<li><code>%MEM</code> – percentage of the physical memory of your system which is used by each process, i.e. the number from the <code>RES</code> column as a fraction of the total memory</li>
+<li><code>%TIME+</code> – Total CPU time the task has used since it started. Note that if a process uses more than one CPU the time reported does not represent ‘wall clock’ time, but CPU time</li>
+<li><code>COMMAND</code> – the command used to initiate each process</li>
+</ul>
+<p>So, for the three most active users, we see:</p>
+<ul>
+<li>user <code>hannibal</code> runs <code>blastx</code> with almost 6 CPUs and very little memory</li>
+<li>user <code>superman</code> runs <code>samtoh5</code> with one CPU and 48 GB of memory</li>
+<li>user <code>username</code> just has started running the <code>top</code> command</li>
+</ul>
+<h3 id="top-tips"><code>top</code> tips</h3>
+<p>After typing <code>top</code>, you can use some keys to change what is displayed:</p>
+<ul>
+<li>If you only want to show the processes that belong to you, you can run <code>top</code> and type the <code>u</code> key followed by your username.</li>
+<li>if you type <code>shift-f</code>, you can select a column to sort the output on. Very useful is sorting on the <code>%MEM</code> column</li>
+<li>type <code>c</code> to show more of the last column, the command used</li>
+<li></li>
+</ul>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2 id="making-top-show-your-processes-only"><span class="glyphicon glyphicon-pushpin"></span>Making <code>top</code> show your processes only</h2>
+</div>
+<div class="panel-body">
+<p>use <code>top -u username</code> to start top with only showing processes belonging to you. Inside <code>top</code>, press <code>u</code> and enter to show processes for all users again.</p>
+</div>
+</aside>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="exercise"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
+</div>
+<div class="panel-body">
+<p>Run <code>top</code> and check the different users that are on the system. Who do you think user <code>root</code> is?</p>
+</div>
+</section>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2 id="reference"><span class="glyphicon glyphicon-pushpin"></span>Reference</h2>
+</div>
+<div class="panel-body">
+<p>A good reference for the <code>top</code> command is this webpage: <a href="http://www.computerhope.com/unix/top.htm" class="uri">http://www.computerhope.com/unix/top.htm</a></p>
+</div>
+</aside>
+<h3 id="starting-and-monitoring-a-simple-job">Starting and monitoring a simple job</h3>
+<p>We are going to use a small script that writes some simple output to the screen, and which allows us to control how long it runs. In an appropriate folder (e.g., your home folder), make a file called <code>rounds.sh</code> with the following content - you can use the <code>nano</code> editor for this :</p>
+<pre><code>rounds=$1
 seconds=$2
-for i in $(seq 1 $stop)
+for i in $(seq 1 $rounds)
     do
-    echo round $i of $stop
+    echo round $i of $rounds
     sleep $seconds
 done</code></pre>
-<p>This script will sleep (unix <code>sleep</code> command) a user-defined amount of times (variable <code>stop</code>) for a user-defined amount of seconds (variable <code>seconds</code>).</p>
+<p>This script will sleep (using the unix <code>sleep</code> command) a user-defined amount of times (variable <code>rounds</code>) for a user-defined amount of seconds (variable <code>seconds</code>).</p>
 <p>Now make the script executable:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">chmod</span> u+x rounds.sh</code></pre></div>
 <p>And try it out:</p>
@@ -91,12 +192,149 @@ round 3 of 3</code></pre>
 <p>Here the script ran 3 <code>sleep</code> commands, which each took 2 seconds.</p>
 <section class="challenge panel panel-success">
 <div class="panel-heading">
-<h2 id="exercise"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
+<h2 id="exercise-1"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
 </div>
 <div class="panel-body">
-<p>Run the script a few times using different settings for the number of rounds and seconds. If the script takes very long, cancel it using <code>ctrl-c</code></p>
+<p>Run the script a few times using different settings for the number of rounds and seconds. If the process takes very long, cancel it using <code>ctrl-c</code></p>
 </div>
 </section>
+<p>Our goal is to start the script and then use <code>top</code> to monitor it. But, if the script is running, you can’t type anything anymore in the terminal until the script is finished. There are several solutions to this problem, and we will go through some of them.</p>
+<p>The easiest way is to simply open another terminal window, log into the same node, and start <code>top -u username</code> there.</p>
+<p>Now, in your first terminal, start the script with 10 rounds of three seconds:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">./rounds.sh</span> 10 3</code></pre></div>
+<pre class="output"><code>round 1 of 10
+round 2 of 10
+round 3 of 10
+round 4 of 10
+round 5 of 10
+round 6 of 10
+round 7 of 10
+round 8 of 10
+round 9 of 10
+round 10 of 10</code></pre>
+<p>and check in the other window what is happening: you should see the <code>sleep</code> command appear.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="exercise-2"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
+</div>
+<div class="panel-body">
+<p>Check the <code>PID</code> number (in the first column of the <code>top</code> output), i.e. the process ID, for the <code>sleep</code> command. Why is it changing while the <code>rounds.sh</code> script is running?</p>
+</div>
+</section>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="exercise-3"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
+</div>
+<div class="panel-body">
+<p>Is the <code>sleep</code> command the only new process one appearing in the <code>top</code> output when you start the script?</p>
+</div>
+</section>
+<h3 id="using-screen-for-long-running-jobs">Using <code>screen</code> for long running jobs</h3>
+<p>If you are starting a long running job you cannot close the terminal window because the job will be cancelled. A solution to this problem is using the so-called unix <code>screen</code>. <code>screen</code> starts a virtual terminal that can be kept ‘alive’ while disconnection from the server.</p>
+<p>To use <code>screen</code>, simply type</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">screen</span></code></pre></div>
+<p>You now started a ‘new’ terminal. Start your job in this new window. After you have started your job you can <em>detach</em> from this screen by pressing <code>ctrl-a-d</code> (The ctrl key with the <code>a</code> key, followed by the <code>d</code> key). Now you’re back in the terminal where you started. But anything that you started ‘inside’ the screen will continue!</p>
+<p>You can close this terminal or even the computer and the ‘new’ terminal will still exist and continue to run your job.</p>
+<p>If you want to get ‘back into’ the now hidden screen type:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">screen</span> -rd</code></pre></div>
+<p>You can start multiple virtual terminals this way by just repeating the <code>screen</code> command. If you have multiple screens running, the <code>screen -rd</code> command will give you a list of the windows available:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"> <span class="kw">screen</span> -rd</code></pre></div>
+<pre class="output"><code>There are several suitable screens on:
+    133548.pts-10.cod5  (Detached)
+    119179.pts-47.cod5  (Detached)
+Type &quot;screen [-d] -r [pid.]tty.host&quot; to resume one of them.</code></pre>
+<p>To choose one of the screens just add the screen ‘name’ after the command:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">screen</span> -rd 45142.pts-15.cod5</code></pre></div>
+<p>Using the first part of the screen ‘name’ also works, as long as it is unique. Here we would could simply use:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">screen</span> -rd 45142.pts-15.cod5</code></pre></div>
+<p>When your job is finished you can to close the virtual terminal by reattaching to it and typing <code>exit</code>, or <code>ctrl-d</code>.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2 id="callout-box"><span class="glyphicon glyphicon-pushpin"></span>Callout Box</h2>
+</div>
+<div class="panel-body">
+<p>you can also name screens using <code>screen -S somename</code> and reattach using the same name: <code>screen -rd somename</code>. <code>screen -list</code> shows all your active screens on the node</p>
+</div>
+</aside>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="exercise-4"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>in a screen, run this command: <code>./rounds.sh 10 5</code></li>
+<li>detach using <code>crtl-a-d</code></li>
+<li>run <code>top -u username</code> to check the script is running</li>
+<li>reattach to the screen to see the output of the job</li>
+</ul>
+</div>
+</section>
+<h3 id="cancelling-a-job">Cancelling a job</h3>
+<p>When you started a long running job in the terminal, you usually can stop it by pressing <code>ctrl-c</code>.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="exercise-5"><span class="glyphicon glyphicon-pencil"></span>Exercise</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>in a screen, run this command: <code>./rounds.sh 10 5</code></li>
+<li>detach using <code>crtl-a-d</code></li>
+<li>run <code>top -u username</code> to check the script is running</li>
+<li>reattach to the screen to see the output of the job</li>
+<li>cancel the job using <code>ctrl-c</code></li>
+<li>detach using <code>crtl-a-d</code></li>
+<li>run <code>top -u username</code> to check the script is no longer running</li>
+<li>reattach to the screen</li>
+<li>exit the screen using <code>exit</code> or <code>ctrl-d</code></li>
+</ul>
+</div>
+</section>
+<h3 id="following-output-of-running-jobs">Following output of running jobs</h3>
+<p>Using <code>top</code> will show you the processes that are running, but not necessarily much detail on what they are doing. Many programs will generate output to the screen or write to log files. In this part, you’ll learn how to inspect the log files, including how to see new output being added as it happens.</p>
+<p>First, let’s start a long running process with the <code>rounds.sh</code> script inside a screen, but this time we write the output it gives to a file:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">screen</span>
+<span class="kw">./rounds.sh</span> 1000 1 <span class="kw">&gt;</span>rounds.out</code></pre></div>
+<p>Note how we choose 1000 rounds of 1 second sleeping. Now you can follow the progress by typing</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cat</span> rounds.out</code></pre></div>
+<pre class="output"><code>round 1 of 1000
+round 2 of 1000
+round 3 of 1000
+round 4 of 1000
+round 5 of 1000
+round 6 of 1000
+round 7 of 1000</code></pre>
+<p>If you do this repeatedly, you’ll see where the process is. Alternatively, you can type</p>
+<pre><code>tail rounds.out</code></pre>
+<pre class="output"><code>round 13 of 1000
+round 14 of 1000
+round 15 of 1000
+round 16 of 1000
+round 17 of 1000
+round 18 of 1000
+round 19 of 1000
+round 20 of 1000
+round 21 of 1000
+round 22 of 1000</code></pre>
+<p>Having to do this repeatedly is cumbersome, so let’s ask the <code>tail</code> command to help us, by continuing to show the end of the file while new content is being added:</p>
+<pre><code>tail -f rounds.out</code></pre>
+<p>You’ll now see how the output of is added at the end, just as if you were running the command itself and letting the output go to the screen.</p>
+<p>Note how it is safe to cancel the <code>tail -f</code> command using <code>crtl-c</code>, as this does not stop the actual process (which runs in a <code>screen</code>). In fact, if you let the <code>rounds.sh</code> script finish, the <code>tail -f</code> command still will wait for new input, which in this case never comes. So, you’ll have to cancel the <code>tail -f</code> to get back to being able to use the terminal.</p>
+<h3 id="reserving-the-node">Reserving the node</h3>
+<p>There are a few ground rules on when you need tell the other users you will be using one of the cod nodes. These are explained on the wiki. Use the cod-nodes mailing list (cod-nodes@ibv.uio.no) for this. The subject should reflect the node you want to use. Say a few words on:</p>
+<ul>
+<li>what you are going to run (program name suffices)</li>
+<li>how much CPUs you are going to use</li>
+<li>how much memory you need (this is often an estimate)</li>
+<li>how long you think the job will take</li>
+</ul>
+<p>Here is an example message:</p>
+<blockquote>
+<p>From: firstname.lastname@ibv.uio.no<br />
+Subject: Cod5 Usage<br />
+To: cod-nodes@ibv.uio.no</p>
+<p>Running assembly with SPADES using 20 CPUs and around 125 GB of memory. The job will last around 24 hrs.</p>
+</blockquote>
+<p>FIXME add link to wiki where ‘rules’ for when to send an email to form on use of a cod node.</p>
         </div>
       </div>
       </article>
