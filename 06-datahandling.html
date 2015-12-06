@@ -48,6 +48,45 @@
 <li><code>sshfs</code></li>
 <li><code>gzip</code>, <code>tar</code>, <code>pbzip2</code></li>
 </ul>
+<p>Log into abel and <code>cd</code> into the folder <strong>151102_cees-hpc_LLT/</strong>. Make a directory called <strong>temp</strong> and enter the folder.</p>
+<pre><code>mkdir temp</code></pre>
+<p>In <strong>temp</strong>, create a file called <em>data.txt</em> using <code>nano</code> and write some random text.</p>
+<pre><code>nano data.txt</code></pre>
+<p>To quit nano do <code>ctrl + x</code>, choose “Yes” (<code>y</code>) and press enter.</p>
+<h3 id="movingrenaming-files-using-mv">Moving/renaming files using ‘mv’</h3>
+<p><code>mv</code> is used to move or rename files. The first parameter given <code>mv</code> points to the file of interest. The second parameter points to where the file is going and what it should be named. If no name is given the file keeps it current name.</p>
+<p>Move <em>data.txt</em> from <strong>temp</strong> to the <strong>velvet</strong> folder.</p>
+<pre><code>mv data.txt ../velvet/</code></pre>
+<p>Check if the file is located in the velvet folder</p>
+<pre><code>ls ../velvet/</code></pre>
+<p>Now, move the file back, renaming it to <em>results.txt</em>.</p>
+<pre><code>mv ../velvet/data.txt results.txt</code></pre>
+<p><code>..</code> points to one step up from your current directory.</p>
+<p>NB! <code>mv</code> will overwrite a file with the same name (without warning). If <code>mv -i</code> is used, the user is asked for confirmation.</p>
+<h3 id="copying-files-using-cp">Copying files using ‘cp’</h3>
+<p>First, make a new file called data.txt, using nano like before.</p>
+<p>Try to make a copy of the file using <code>cp</code>, renaming the copy in the process.</p>
+<pre><code>cp data.txt copy1.txt</code></pre>
+<p>If you do not rename, you will get this error:</p>
+<pre><code>cp: `data.txt and `data.txt&#39; are the same file</code></pre>
+<p>Repeat the process to get three copies of <em>data.txt</em> (<em>copy1.txt</em>, <em>copy2.txt</em> etc.)</p>
+<p>Now, make a folder called <strong>junk</strong> inside the <strong>temp</strong> folder and copy all the copies except the original to the copies folder.</p>
+<pre><code>cp copy1.txt copy2.txt copy3.txt junk/</code></pre>
+<p><code>cp</code> can take thousands of files as input, but the last parameter given will be the path of the copies.</p>
+<p>All the copies are still in the <strong>temp</strong> folder, so we should probably have used the <code>mv</code> command instead of <code>cp</code>.</p>
+<p>Move all the copies into the junk/ folder, using the -i command.</p>
+<pre><code>mv -i copy* junk</code></pre>
+<pre><code>mv: overwrite `junk/copy1.txt&#39;?</code></pre>
+<p>Press <code>y</code> and <code>enter</code> to overwrite the files.</p>
+<h3 id="copying-files-using-rsync">Copying files using ‘rsync’</h3>
+<p><code>rsync</code>is another way you may copy files from their source to a new destination. Unlike <code>cp</code>and <code>mv</code>, the <code>rsync</code> command allows you to copy files from abel or from the cod nodes to your local drive and vice versa.</p>
+<p>The syntax is basically</p>
+<pre><code>rsync source destination</code></pre>
+<p>Copy the content of the <strong>temp</strong> folder to your local drive (open a new terminal window and do <code>pwd</code> to see where you are).</p>
+<pre><code>rsync username@abel.uio.no:/151102_cees-hpc_LLT/temp/* .</code></pre>
+<p>Did you get all the files? Since there is a folder inside the <strong>temp</strong> folder, <code>rsync -r</code> need to be used. The ‘-r’ stands for recursive. Repeat the command with the -r option.</p>
+<p>Try to copy the <strong>junk</strong> folder back to abel and follow the progress.</p>
+<pre><code>rsync -r --progress junk/ username@abel.uio.no:/151102_cees-hpc_LLT/temp/</code></pre>
         </div>
       </div>
       </article>
