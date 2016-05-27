@@ -91,7 +91,10 @@ Here is a description of the different parts:
 top - 08:01:08 up 22 days, 16:27,  4 users,  load average: 6.62, 6.96, 7.50
 ~~~
 
-This first line explains how long the node has been running since the last restart, how many users are logged in, and the load, roughly the average number of CPUs busy during the last one, five, and fifteen minutes.
+This first line explains how long the node has been running since the last restart, how many users are logged in, and the load, roughly the average number of CPUs busy during the last one, five, and fifteen minutes. A rule of thumb for keeping a cod node happy is not to submit jobs if it will make  the  15 min load average to surpass 32. It should be sought to avoid to run more than 32 processes at the same time. The cod nodes have 32 two dual cores and do manage to run 64 processes and even to keep further processes in queue but faces then the risk of being inefficient. It is recommended to run only one process per core.
+
+> ## Reference {.callout}
+> Further reading is found here: <http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages>
 
 ~~~ {.output}
 Tasks: 1997 total,   2 running, 1994 sleeping,   1 stopped,   0 zombie
