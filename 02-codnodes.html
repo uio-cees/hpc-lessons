@@ -103,7 +103,15 @@ Swap: 10485756k total,   318964k used, 10166792k free, 963947960k cached
 <p>The content will refresh itself every few seconds. To get back to the command line, press the <code>q</code> key</p>
 <p>Here is a description of the different parts:</p>
 <pre class="output"><code>top - 08:01:08 up 22 days, 16:27,  4 users,  load average: 6.62, 6.96, 7.50</code></pre>
-<p>This first line explains how long the node has been running since the last restart, how many users are logged in, and the load, roughly the average number of CPUs busy during the last one, five, and fifteen minutes.</p>
+<p>This first line explains how long the node has been running since the last restart, how many users are logged in, and the load, roughly the average number of CPUs busy during the last one, five, and fifteen minutes. A rule of thumb for keeping a cod node happy is not to submit jobs if it will make the 15 min load average to surpass 32. It should be sought to avoid to run more than 32 processes at the same time. The cod nodes have 32 two dual cores and do manage to run 64 processes and even to keep further processes in queue but faces then the risk of being inefficient. It is recommended to run only one process per core.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2 id="reference"><span class="glyphicon glyphicon-pushpin"></span>Reference</h2>
+</div>
+<div class="panel-body">
+<p>Further reading is found here: <a href="http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages" class="uri">http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages</a></p>
+</div>
+</aside>
 <pre class="output"><code>Tasks: 1997 total,   2 running, 1994 sleeping,   1 stopped,   0 zombie</code></pre>
 <p>The next line lists the number of tasks (or processes) and their state: total, running, sleeping (blocked or waiting for something) stopped or <a href="https://en.wikipedia.org/wiki/Zombie_process">zombie</a>.</p>
 <pre class="output"><code>Cpu(s): 10.9%us,  0.1%sy,  0.0%ni, 89.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st</code></pre>
@@ -166,7 +174,7 @@ Swap: 10485756k total,   318964k used, 10166792k free, 963947960k cached</code><
 </section>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
-<h2 id="reference"><span class="glyphicon glyphicon-pushpin"></span>Reference</h2>
+<h2 id="reference-1"><span class="glyphicon glyphicon-pushpin"></span>Reference</h2>
 </div>
 <div class="panel-body">
 <p>A good reference for the <code>top</code> command is this webpage: <a href="http://www.computerhope.com/unix/top.htm" class="uri">http://www.computerhope.com/unix/top.htm</a></p>
